@@ -32,12 +32,4 @@ describe("GET - ", () => {
         expect(body.msg).toBe("Route not found");
       });
   });
-  xtest("500: responds with message - 'Internal Server Error' for an invalid url", () => {
-    return request(app)
-      .get("/api/notARoute")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Internal Server Error");
-      });
-  });
-});
+ });
