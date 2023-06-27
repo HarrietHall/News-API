@@ -21,7 +21,7 @@ describe("GET - api/topics", () => {
         expect(body.topics).toHaveLength(3);
         body.topics.forEach((topic) => {
           expect(topic).toHaveProperty("description", expect.any(String));
-          expect(topic).toHaveProperty("description", expect.any(String));
+          expect(topic).toHaveProperty("slug", expect.any(String));
         });
       });
   });
@@ -41,8 +41,46 @@ describe("GET - /api", () => {
       .get("/api")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.endpointData).toEqual(endpointData);
       });
   });
+});
+
+describe("GET -  /api/articles/:article_id", () => {
+  test("200: Responds with article object with the specified article id", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        console.log(article)
+    
+        expect(article).toHaveProperty("title", expect.any(String));
+        expect(article).toHaveProperty("article_id", expect.any(Number));
+        expect(article).toHaveProperty("body", expect.any(String));
+        expect(article).toHaveProperty("topic", expect.any(String));
+        expect(article).toHaveProperty("created_at", expect.any(String));
+        expect(article).toHaveProperty("votes", expect.any(Number));
+        expect(article).toHaveProperty(
+          "article_img_url",
+          expect.any(String)
+        );
+      });
+  });
+});
+test("400 : Responds with message -'Bad Request' for an invalid article id", () => {
+  return request(app)
+    .get("/api/articles/notAnId")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad Request");
+    });
+});
+test("404 : Responds with message -'Not Found' when article id is valid but does not exist", () => {
+  return request(app)
+    .get("/api/articles/99999999")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found");
+    });
 });
