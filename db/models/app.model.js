@@ -1,4 +1,8 @@
 const db = require("../connection");
+
+
+
+
 exports.selectAllTopics = () => {
   const query = "SELECT * FROM topics ";
 
@@ -6,3 +10,6 @@ exports.selectAllTopics = () => {
     return rows;
   });
 };
+
+
+

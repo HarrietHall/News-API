@@ -3,6 +3,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data/index");
 const request = require("supertest");
+const endpointData = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(testData);
@@ -11,7 +12,7 @@ afterAll(() => {
   db.end();
 });
 
-describe("GET - ", () => {
+describe("GET - api/topics", () => {
   test("200: Responds with an array of all topics:", () => {
     return request(app)
       .get("/api/topics")
@@ -32,4 +33,16 @@ describe("GET - ", () => {
         expect(body.msg).toBe("Route not found");
       });
   });
- });
+});
+
+describe("GET - /api", () => {
+  test("200: Responds with contents of endpoints.json", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.endpointData).toEqual(endpointData);
+      });
+  });
+});
