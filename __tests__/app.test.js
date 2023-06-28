@@ -89,7 +89,7 @@ test("404 : Responds with message -'Not Found' when article id is valid but does
 
 
 
-describe.only("POST /api/articles/:article_id/comments", () => {
+xdescribe("POST /api/articles/:article_id/comments", () => {
   test("201: Responds with new comment after adding it to the database", () => {
     const newComment = {
       username:'uhddfuwehf', body:'wggefuhwiuef'

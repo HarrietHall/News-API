@@ -43,4 +43,5 @@ exports.insertArticleComments = (newComment) => {
 
       return response.rows[0];
     });
-};
+})
+}
