@@ -20,11 +20,12 @@ exports.selectArticleById = (article_id) => {
 };
 
 exports.selectArticleComments = (article_id) => {
-  const query = "SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC";
+  const query =
+    "SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC";
 
   return db.query(query, [article_id]).then(({ rows }) => {
     if (!rows.length) {
-      return Promise.reject({ status: 404, msg: "Not Found" });
+      return Promise.resolve({ status: 200, msg: "No comments found" });
     }
 
     return rows;

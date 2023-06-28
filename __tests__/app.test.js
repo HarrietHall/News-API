@@ -53,7 +53,6 @@ describe("GET -  /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article);
 
         expect(article).toHaveProperty("title", expect.any(String));
         expect(article).toHaveProperty("article_id", expect.any(Number));
@@ -90,7 +89,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         const { comments } = body;
         expect(comments).toBeSortedBy("created_at", { descending: true });
-        console.log(body);
+
         comments.forEach((comment) => {
           expect(comment.article_id).toBe(1);
 
@@ -100,6 +99,15 @@ describe("GET /api/articles/:article_id/comments", () => {
           expect(comment).toHaveProperty("author", expect.any(String));
           expect(comment).toHaveProperty("body", expect.any(String));
         });
+      });
+  });
+  test.only("200: Responds with an empty array if article_id exists but there are no comments ", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments.msg).toBe("No comments found");
       });
   });
 
