@@ -86,6 +86,7 @@ xdescribe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
+        console.log(body)
         const { article } = body;
         expect(article).toHaveLength(13);
         expect(article).toBeSortedBy("created_at", { descending: true });

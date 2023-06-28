@@ -1,7 +1,7 @@
 const db = require("../connection");
 const endpointData = require("../../endpoints.json");
 
-const { selectAllTopics, selectArticleById, selectAllArticles} = require("../models/app.model");
+const { selectAllTopics, selectArticleById, selectAllArticles } = require("../models/app.model");
 
 exports.getAllTopics = (req, res, next) => {
   selectAllTopics()
