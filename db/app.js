@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
+app.use(express.json());
+
 const {handlePsqlErrors, handleCustomErrors, handleServerErrors } = require("./errors/errors");
 
 const { getAllTopics, getEndpointData , getArticleById, postArticleComments} = require("./controllers/app.controller");

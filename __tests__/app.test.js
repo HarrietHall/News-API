@@ -53,18 +53,15 @@ describe("GET -  /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article)
-    
+     
+
         expect(article).toHaveProperty("title", expect.any(String));
         expect(article).toHaveProperty("article_id", expect.any(Number));
         expect(article).toHaveProperty("body", expect.any(String));
         expect(article).toHaveProperty("topic", expect.any(String));
         expect(article).toHaveProperty("created_at", expect.any(String));
         expect(article).toHaveProperty("votes", expect.any(Number));
-        expect(article).toHaveProperty(
-          "article_img_url",
-          expect.any(String)
-        );
+        expect(article).toHaveProperty("article_img_url", expect.any(String));
       });
   });
 });
@@ -85,30 +82,22 @@ test("404 : Responds with message -'Not Found' when article id is valid but does
     });
 });
 
-
-
-
-
 xdescribe("POST /api/articles/:article_id/comments", () => {
   test("201: Responds with new comment after adding it to the database", () => {
     const newComment = {
-      username:'uhddfuwehf', body:'wggefuhwiuef'
+      username: "uhddfuwehf",
+      body: "wggefuhwiuef",
     };
     return request(app)
-      .post("/api/articles/:article_id/comments")
+      .post("/api/articles/1/comments")
       .send(newComment)
       .expect(201)
-      .then(({body}) => {
+      .then(({ body }) => {
+        console.log(body);
         expect(body).toBeInstanceOf(Object);
-        // expect(body.restaurant).toMatchObject({
-        //     'restaurant_id': expect.any(Number),
-        //     'restaurant_name': expect.any(String),
-        //     'area_id': expect.any(Number),
-        //     'cuisine': expect.any(String),
-        //     'website': expect.any(String),
-          });
-          expect(body.restaurant).toHaveProperty("username", expect.any(String));
-          expect(body.restaurant).toHaveProperty("body", expect.any(String));
 
+        expect(body.restaurant).toHaveProperty("username", expect.any(String));
+        expect(body.restaurant).toHaveProperty("body", expect.any(String));
       });
   });
+});
