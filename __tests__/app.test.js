@@ -84,3 +84,31 @@ test("404 : Responds with message -'Not Found' when article id is valid but does
       expect(body.msg).toBe("Not Found");
     });
 });
+
+
+
+
+
+describe.only("POST /api/articles/:article_id/comments", () => {
+  test("201: Responds with new comment after adding it to the database", () => {
+    const newComment = {
+      username:'uhddfuwehf', body:'wggefuhwiuef'
+    };
+    return request(app)
+      .post("/api/articles/:article_id/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({body}) => {
+        expect(body).toBeInstanceOf(Object);
+        // expect(body.restaurant).toMatchObject({
+        //     'restaurant_id': expect.any(Number),
+        //     'restaurant_name': expect.any(String),
+        //     'area_id': expect.any(Number),
+        //     'cuisine': expect.any(String),
+        //     'website': expect.any(String),
+          });
+          expect(body.restaurant).toHaveProperty("username", expect.any(String));
+          expect(body.restaurant).toHaveProperty("body", expect.any(String));
+
+      });
+  });
