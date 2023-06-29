@@ -1,7 +1,7 @@
 const db = require("../connection");
 const endpointData = require("../../endpoints.json");
 
-const { selectAllTopics, selectArticleById, selectAllArticles } = require("../models/app.model");
+const { selectAllTopics, selectArticleById, selectAllArticles, selectArticleVotes } = require("../models/app.model");
 
 exports.getAllTopics = (req, res, next) => {
   selectAllTopics()
@@ -21,6 +21,7 @@ exports.getArticleById = (req, res, next) => {
 
 const {article_id} = req.params
 
+
 selectArticleById(article_id)
 .then((article) => {
   res.status(200).send({ article });
@@ -39,4 +40,18 @@ exports.getAllArticles = (req, res, next) => {
   };
 
 
+exports.patchArticleVotes = (req, res, next) => {
+  console.log('in controlelr')
 
+const {article_id} = req.params
+const { inc_votes } = req.body
+console.log(inc_votes)
+
+selectArticleVotes(article_id, inc_votes)
+
+.then((article) => {
+
+res.status(200).send({ article });
+})
+.catch(next);
+};

@@ -86,7 +86,7 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body)
+       
         const { article } = body;
         expect(article).toHaveLength(13);
         expect(article).toBeSortedBy("created_at", { descending: true });
@@ -103,11 +103,17 @@ describe("GET /api/articles", () => {
   });
 });
 
-
-
-describe(": PATCH /api/articles/:article_id", () => {
-  test("")
-
-
-
-})
+xdescribe(": PATCH /api/articles/:article_id", () => {
+  test("200: Responds with an article object with the views property updated", () => {
+    const newVotes = { inc_votes: 1 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(newVotes)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        const { article } = body;
+        expect(article.votes).toBe(1);
+      });
+  });
+});

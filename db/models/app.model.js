@@ -24,9 +24,32 @@ exports.selectAllArticles = () => {
   const query = "SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.created_at DESC "; 
 
   return db.query(query).then(({ rows }) => {
-    console.log(rows)
+
 
 
     return rows;
   });
 };
+
+
+exports.selectArticlesVotes = (article_id, inc_votes) => {
+
+
+  console.log('in model ')
+  const queryValues = []
+  const query = "SELECT * FROM articles WHERE article_id = $1 UPDATE articles SET votes = $2 RETURNING *;"
+  queryValues.push(article_id, inc_votes);
+
+  return db.query(query, [queryValues]).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Not Found" });
+    }
+
+queryValues.push(article_id, inc_votes)
+
+  
+    return rows[0];
+  });
+};
+
+
