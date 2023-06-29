@@ -31,15 +31,12 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticleComments = (req, res, next) => {
   const { article_id } = req.params;
-  const promises = [selectArticleComments(article_id)];
+  const promises = [selectArticleById(article_id), selectArticleComments(article_id)];
 
-  if (article_id) {
-    promises.push(selectArticleById(article_id));
-  }
   Promise.all(promises)
 
     .then((resolvedPromises) => {
-      const comments = resolvedPromises[0];
+      const comments = resolvedPromises[1];
 
       res.status(200).send({ comments });
     })

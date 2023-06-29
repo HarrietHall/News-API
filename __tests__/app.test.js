@@ -89,10 +89,8 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         const { comments } = body;
         expect(comments).toBeSortedBy("created_at", { descending: true });
-
         comments.forEach((comment) => {
           expect(comment.article_id).toBe(1);
-
           expect(comment).toHaveProperty("comment_id", expect.any(Number));
           expect(comment).toHaveProperty("votes", expect.any(Number));
           expect(comment).toHaveProperty("created_at", expect.any(String));
