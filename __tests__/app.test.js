@@ -86,7 +86,6 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-       
         const { article } = body;
         expect(article).toHaveLength(13);
         expect(article).toBeSortedBy("created_at", { descending: true });
@@ -103,17 +102,45 @@ describe("GET /api/articles", () => {
   });
 });
 
-xdescribe(": PATCH /api/articles/:article_id", () => {
-  test("200: Responds with an article object with the views property updated", () => {
+describe(" PATCH /api/articles/:article_id", () => {
+  test("200: Responds with an article object with the views property updated adding votes", () => {
     const newVotes = { inc_votes: 1 };
     return request(app)
       .patch("/api/articles/1")
-      .send(newVotes)
+      .send({ newVotes })
       .expect(200)
       .then(({ body }) => {
         console.log(body);
         const { article } = body;
-        expect(article.votes).toBe(1);
+        expect(article.votes).toBe(101);
+      });
+  });
+  test("200: Responds with an article object with the views property updated subtracting votes", () => {
+    const newVotes = { inc_votes: -100 };
+    return request(app)
+      .patch("/api/articles/2")
+      .send({ newVotes })
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        const { article } = body;
+        expect(article.votes).toBe(-100);
+      });
+  });
+  test("400 : Responds with message -'Bad Request' for an invalid article id", () => {
+    return request(app)
+      .get("/api/articles/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("404 : Responds with message -'Not Found' when article id is valid but does not exist", () => {
+    return request(app)
+      .get("/api/articles/99999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
       });
   });
 });
