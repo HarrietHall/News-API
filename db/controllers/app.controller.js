@@ -32,18 +32,10 @@ exports.getArticleById = (req, res, next) => {
 exports.postArticleComments = (req, res, next) => {
   const newComment = req.body;
   const { article_id } = req.params;
-
-  const promises = [selectArticleById(article_id)];
-  if (article_id) {
-    promises.push(insertArticleComments(newComment));
-  }
-  Promise.all(promises)
-
-    .then((resolvedPromises) => {
-      console.log(resolvedPromises);
-      const comment = resolvedPromises[1]
+  insertArticleComments(article_id, newComment)
+    .then((comment) => {
+    console.log(comment)
       res.status(201).send({ comment });
     })
-
     .catch(next);
 };

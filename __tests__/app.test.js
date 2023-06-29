@@ -53,7 +53,6 @@ describe("GET -  /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-     
 
         expect(article).toHaveProperty("title", expect.any(String));
         expect(article).toHaveProperty("article_id", expect.any(Number));
@@ -82,22 +81,41 @@ test("404 : Responds with message -'Not Found' when article id is valid but does
     });
 });
 
-xdescribe("POST /api/articles/:article_id/comments", () => {
+describe("POST /api/articles/:article_id/comments", () => {
   test("201: Responds with new comment after adding it to the database", () => {
     const newComment = {
-      username: "uhddfuwehf",
-      body: "wggefuhwiuef",
+      username: "butter_bridge",
+      body: "Impressive article",
     };
     return request(app)
-      .post("/api/articles/1/comments")
+      .post("/api/articles/5/comments")
       .send(newComment)
       .expect(201)
       .then(({ body }) => {
-        console.log(body);
-        expect(body).toBeInstanceOf(Object);
-
-        expect(body.restaurant).toHaveProperty("username", expect.any(String));
-        expect(body.restaurant).toHaveProperty("body", expect.any(String));
+        const { comment } = body;
+        console.log(comment.body);
+        expect(comment).toHaveProperty("comment_id", expect.any(Number));
+        expect(comment).toHaveProperty("body", "Impressive article");
+        expect(comment).toHaveProperty("article_id", 5);
+        expect(comment).toHaveProperty("author", "butter_bridge");
+        expect(comment).toHaveProperty("votes", 0);
+        expect(comment).toHaveProperty("created_at", expect.any(String));
       });
   });
+});
+test("400 : Responds with message -'Bad Request' for an invalid article id", () => {
+  return request(app)
+    .get("/api/articles/notAnId")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad Request");
+    });
+});
+test("404 : Responds with message -'Not Found' when article id is valid but does not exist", () => {
+  return request(app)
+    .get("/api/articles/99999999")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found");
+    });
 });

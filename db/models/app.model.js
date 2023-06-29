@@ -19,21 +19,15 @@ exports.selectArticleById = (article_id) => {
   });
 };
 
-exports.insertArticleComments = (newComment) => {
+exports.insertArticleComments = (article_id, newComment) => {
   const { username, body } = newComment;
+const queryValues = []
+  const query =
+"INSERT INTO comments ( body, author, article_id) VALUES ($1, $2, $3) RETURNING *; "
+queryValues.push(body, username, article_id);
 
-  return db
-    .query(
-      "INSERT INTO comments (username, body) VALUES ($1, $2) RETURNING *; ",
-      [username, body]
-    )
 
-    .then((response) => {
-      console.log(response)
-      if (response.rows.length === 0) {
-        return Promise.reject({ status: 400, msg: "Bad request" });
-      }
-
-      return response.rows[0];
-    });
+  return db.query(query, queryValues).then(({ rows }) => {
+     return rows[0];
+  });
 };
