@@ -25,7 +25,7 @@ describe("GET - api/topics", () => {
         });
       });
   });
-  test("404: responds with message - 'Not Found' for an invalid endpoint", () => {
+  test("404: responds with message - 'Route not Found' for an invalid endpoint", () => {
     return request(app)
       .get("/api/notARoute")
       .expect(404)
@@ -86,7 +86,6 @@ describe("GET /api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body)
         const { article } = body;
         expect(article).toHaveLength(13);
         expect(article).toBeSortedBy("created_at", { descending: true });
@@ -99,6 +98,33 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("article_img_url", expect.any(String));
           expect(article).toHaveProperty("comment_count", expect.any(String));
         });
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Responds with message - 'No content", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({body}) => {
+        expect(body).toEqual({});
+      });
+  });
+  test("400 : Responds with message -'Bad Request' for an invalid comment id", () => {
+    return request(app)
+      .delete("/api/comments/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("404 : Responds with message -'Not Found' when comment id is valid but does not exist", () => {
+    return request(app)
+      .delete("/api/comments/99999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
       });
   });
 });
