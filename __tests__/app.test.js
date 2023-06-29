@@ -101,7 +101,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
-  test.only("200: Responds with an empty array if article_id exists but there are no comments ", () => {
+  test("200: Responds with an empty array if article_id exists but there are no comments ", () => {
     return request(app)
       .get("/api/articles/2/comments")
       .expect(200)
