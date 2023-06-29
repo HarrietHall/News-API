@@ -102,3 +102,12 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
+
+
+describe(": PATCH /api/articles/:article_id", () => {
+  test("")
+
+
+
+})
