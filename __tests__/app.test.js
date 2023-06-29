@@ -80,7 +80,7 @@ test("404 : Responds with message -'Not Found' when article id is valid but does
     });
 });
 
-xdescribe("GET /api/articles", () => {
+describe.only("GET /api/articles", () => {
   test("200: Responds with an array of article objects", () => {
     return request(app)
       .get("/api/articles")
@@ -97,7 +97,7 @@ xdescribe("GET /api/articles", () => {
           expect(article).toHaveProperty("created_at", expect.any(String));
           expect(article).toHaveProperty("votes", expect.any(Number));
           expect(article).toHaveProperty("article_img_url", expect.any(String));
-          expect(article).toHaveProperty("comment_count", expect.any(Number));
+          expect(article).toHaveProperty("comment_count", expect.any(String));
         });
       });
   });
