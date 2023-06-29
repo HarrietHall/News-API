@@ -25,7 +25,7 @@ exports.selectArticleComments = (article_id) => {
 
   return db.query(query, [article_id]).then(({ rows }) => {
     if (!rows.length) {
-      return Promise.resolve({ status: 200, msg: "No comments found" });
+      return Promise.resolve({ comments: `${rows}`,status: 200, msg: "No comments found" });
     }
 
     return rows;

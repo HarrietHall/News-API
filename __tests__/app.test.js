@@ -89,6 +89,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         const { comments } = body;
         expect(comments).toBeSortedBy("created_at", { descending: true });
+        expect(comments.length).toBe(11);
         comments.forEach((comment) => {
           expect(comment.article_id).toBe(1);
           expect(comment).toHaveProperty("comment_id", expect.any(Number));
@@ -103,8 +104,9 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/2/comments")
       .expect(200)
-      .then(({ body }) => {
+        .then(({body}) => {
         const { comments } = body;
+        expect(comments.comments).toHaveLength(0)
         expect(comments.msg).toBe("No comments found");
       });
   });
