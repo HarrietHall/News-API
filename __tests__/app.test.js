@@ -80,7 +80,7 @@ test("404 : Responds with message -'Not Found' when article id is valid but does
     });
 });
 
-describe.only("GET /api/articles", () => {
+describe("GET /api/articles", () => {
   test("200: Responds with an array of article objects", () => {
     return request(app)
       .get("/api/articles")
