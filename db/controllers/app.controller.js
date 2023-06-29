@@ -1,7 +1,7 @@
 const db = require("../connection");
 const endpointData = require("../../endpoints.json");
 
-const { selectAllTopics, selectArticleById } = require("../models/app.model");
+const { selectAllTopics, selectArticleById, selectAllArticles } = require("../models/app.model");
 
 exports.getAllTopics = (req, res, next) => {
   selectAllTopics()
@@ -27,6 +27,16 @@ selectArticleById(article_id)
 })
 .catch(next);
 };
+
+
+
+exports.getAllArticles = (req, res, next) => {
+  selectAllArticles()
+    .then((article) => {
+    res.status(200).send({ article });
+  })
+  .catch(next);
+  };
 
 
 
