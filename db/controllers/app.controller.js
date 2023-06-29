@@ -41,11 +41,9 @@ exports.getAllArticles = (req, res, next) => {
 
 
 exports.patchArticleVotes = (req, res, next) => {
-  console.log('in controlelr')
 
 const {article_id} = req.params
-const { inc_votes } = req.body
-console.log(inc_votes)
+const { inc_votes } = req.body.newVotes
 
 selectArticleVotes(article_id, inc_votes)
 
@@ -53,5 +51,7 @@ selectArticleVotes(article_id, inc_votes)
 
 res.status(200).send({ article });
 })
-.catch(next);
-};
+.catch((err) => {
+  console.log(err);
+})
+}
