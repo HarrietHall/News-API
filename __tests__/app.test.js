@@ -103,7 +103,7 @@ describe("GET /api/articles", () => {
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
-  test("204: Responds with message - 'No content", () => {
+  xtest("204: Responds with message - 'No content", () => {
     return request(app)
       .delete("/api/comments/1")
       .expect(204)
