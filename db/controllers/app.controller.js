@@ -1,12 +1,9 @@
 const db = require("../connection");
 const endpointData = require("../../endpoints.json");
 
-const {
-  selectAllTopics,
-  selectArticleById,
-  selectArticleComments,
-  insertArticleComments,
-} = require("../models/app.model");
+
+const { selectAllTopics, selectArticleById, selectAllArticles, selectArticleVotes } = require("../models/app.model");
+
 
 exports.getAllTopics = (req, res, next) => {
   selectAllTopics()
@@ -30,32 +27,33 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
-exports.getArticleComments = (req, res, next) => {
-  const { article_id } = req.params;
-  const promises = [
-    selectArticleById(article_id),
-    selectArticleComments(article_id),
-  ];
 
-  Promise.all(promises)
 
-    .then((resolvedPromises) => {
-      const comments = resolvedPromises[1];
 
-      res.status(200).send({ comments });
-    })
-
-    .catch(next);
-};
-exports.postArticleComments = (req, res, next) => {
-  const newComment = req.body;
-  const { article_id } = req.params;
-  
-  
-  insertArticleComments(article_id, newComment)
-  .then((comment) => {
-  res.status(201).send({ comment });
+exports.getAllArticles = (req, res, next) => {
+  selectAllArticles()
+    .then((article) => {
+    res.status(200).send({ article });
   })
   .catch(next);
   };
+
+
+
+
+  exports.patchArticleVotes = (req, res, next) => {
+
   
+  const {article_id} = req.params
+  const { inc_votes } = req.body.newVotes
+  
+  selectArticleVotes(article_id, inc_votes)
+  
+  .then((article) => {
+
+  
+  res.status(200).send({ article });
+  })
+  .catch(next)
+ 
+  }

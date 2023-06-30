@@ -19,6 +19,15 @@ exports.selectArticleById = (article_id) => {
   });
 };
 
+exports.selectAllArticles = () => {
+  const query =
+    "SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.created_at DESC ";
+
+  return db.query(query).then(({ rows }) => {
+    return rows;
+  })
+}
+
 exports.selectArticleComments = (article_id) => {
   const query =
     "SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC";
@@ -35,20 +44,16 @@ exports.selectArticleComments = (article_id) => {
     return rows;
   });
 };
-exports.insertArticleComments = (article_id, newComment) => {
-  const { username, body } = newComment;
-  
-  
+
+exports.selectArticleVotes = (article_id, inc_votes) => {
   const query =
-  "INSERT INTO comments ( body, author, article_id) VALUES ($1, $2, $3) RETURNING *; ";
-  const queryValues = [body, username, article_id];
-  
-  
-  return db.query(query, queryValues).then(({ rows }) => {
-  if (!rows.length) {
-  return Promise.reject({ status: 404, msg: "Not Found" });
-  }
-  return rows[0];
+    "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *; ";
+
+  return db.query(query, [inc_votes, article_id]).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Not Found" });
+    }
+
+    return rows[0];
   });
-  };
-  
+};
