@@ -7,7 +7,7 @@ app.use(express.json());
 const {handlePsqlErrors, handleCustomErrors, handleServerErrors } = require("./errors/errors");
 
 
-const { getAllTopics, getEndpointData , getArticleById, postArticleComments} = require("./controllers/app.controller");
+const { getAllTopics, getEndpointData , getArticleById, getArticleComments, postArticleComments} = require("./controllers/app.controller");
 
 
 

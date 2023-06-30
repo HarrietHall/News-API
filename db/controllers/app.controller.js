@@ -5,8 +5,7 @@ const {
   selectAllTopics,
   selectArticleById,
   selectArticleComments,
-  insertArticleComments
-
+  insertArticleComments,
 } = require("../models/app.model");
 
 exports.getAllTopics = (req, res, next) => {
@@ -31,11 +30,12 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
-
-
 exports.getArticleComments = (req, res, next) => {
   const { article_id } = req.params;
-  const promises = [selectArticleById(article_id), selectArticleComments(article_id)];
+  const promises = [
+    selectArticleById(article_id),
+    selectArticleComments(article_id),
+  ];
 
   Promise.all(promises)
 
@@ -45,15 +45,17 @@ exports.getArticleComments = (req, res, next) => {
       res.status(200).send({ comments });
     })
 
-
     .catch(next);
 };
-
 exports.postArticleComments = (req, res, next) => {
   const newComment = req.body;
   const { article_id } = req.params;
-
+  
+  
   insertArticleComments(article_id, newComment)
-    .then((comment) => {
-      res.status(201).send({ comment });
-    })
+  .then((comment) => {
+  res.status(201).send({ comment });
+  })
+  .catch(next);
+  };
+  
