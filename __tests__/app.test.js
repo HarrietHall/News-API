@@ -128,7 +128,7 @@ xdescribe("GET /api/articles/:article_id/comments", () => {
     });
 });
 
-xdescribe(" PATCH /api/articles/:article_id", () => {
+describe(" PATCH /api/articles/:article_id", () => {
   test("200: Responds with an article object with the views property updated adding votes", () => {
     const newVotes = { inc_votes: 1 };
     return request(app)
