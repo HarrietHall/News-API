@@ -93,7 +93,6 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(201)
       .then(({ body }) => {
         const { comment } = body;
-        console.log(comment.body);
         expect(comment).toHaveProperty("comment_id", expect.any(Number));
         expect(comment).toHaveProperty("body", "Impressive article");
         expect(comment).toHaveProperty("article_id", 5);
@@ -104,16 +103,52 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 test("400 : Responds with message -'Bad Request' for an invalid article id", () => {
+  const newComment = {
+    username: "butter_bridge",
+    body: "Impressive article",
+  };
   return request(app)
-    .get("/api/articles/notAnId")
+    .post("/api/articles/notAnId/comments")
     .expect(400)
+    .send(newComment)
     .then(({ body }) => {
       expect(body.msg).toBe("Bad Request");
     });
 });
 test("404 : Responds with message -'Not Found' when article id is valid but does not exist", () => {
+  const newComment = {
+    username: "butter_bridge",
+    body: "Impressive article",
+  };
   return request(app)
-    .get("/api/articles/99999999")
+    .post("/api/articles/99999999/comments")
+    .expect(404)
+    .send(newComment)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found");
+    });
+});
+test("400: Responds with message -'Bad Request' when newComment has invalid keys", () => {
+  const newComment = {
+    not_a_username: "butter_bridge",
+    not_a_body: "Impressive article",
+  };
+  return request(app)
+    .post("/api/articles/5/comments")
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad Request");
+    });
+});
+test("404: Responds with message -'Not Found' when username does not exist", () => {
+  const newComment = {
+    username: "Smithy",
+    body: "What a read!",
+  };
+  return request(app)
+    .post("/api/articles/5/comments")
+    .send(newComment)
     .expect(404)
     .then(({ body }) => {
       expect(body.msg).toBe("Not Found");

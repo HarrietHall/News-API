@@ -21,13 +21,15 @@ exports.selectArticleById = (article_id) => {
 
 exports.insertArticleComments = (article_id, newComment) => {
   const { username, body } = newComment;
-const queryValues = []
-  const query =
-"INSERT INTO comments ( body, author, article_id) VALUES ($1, $2, $3) RETURNING *; "
-queryValues.push(body, username, article_id);
 
+  const query =
+    "INSERT INTO comments ( body, author, article_id) VALUES ($1, $2, $3) RETURNING *; ";
+  const queryValues = [body, username, article_id];
 
   return db.query(query, queryValues).then(({ rows }) => {
-     return rows[0];
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Not Found" });
+    }
+    return rows[0];
   });
 };
