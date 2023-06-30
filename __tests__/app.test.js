@@ -110,7 +110,6 @@ describe(" PATCH /api/articles/:article_id", () => {
       .send({ newVotes })
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         const { article } = body;
         expect(article.votes).toBe(101);
       });
@@ -122,25 +121,38 @@ describe(" PATCH /api/articles/:article_id", () => {
       .send({ newVotes })
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         const { article } = body;
         expect(article.votes).toBe(-100);
       });
   });
   test("400 : Responds with message -'Bad Request' for an invalid article id", () => {
+    const newVotes = { inc_votes: -100 };
     return request(app)
-      .get("/api/articles/notAnId")
+      .patch("/api/articles/notAnId")
+      .send({ newVotes })
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad Request");
       });
   });
   test("404 : Responds with message -'Not Found' when article id is valid but does not exist", () => {
+    const newVotes = { inc_votes: -100 };
     return request(app)
-      .get("/api/articles/99999999")
+      .patch("/api/articles/99999999")
+      .send({ newVotes })
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
+      });
+  });
+  test.only("400: Responds with message -'Bad Request' when newVotes has a missing key/malformed request ", () => {
+    const newVotes = { not_inc_votes: -100 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ newVotes })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
       });
   });
 });

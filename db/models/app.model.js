@@ -29,14 +29,10 @@ exports.selectAllArticles = () => {
 };
 
 exports.selectArticleVotes = (article_id, inc_votes) => {
-  console.log(article_id);
-  console.log(inc_votes);
-
   const query =
     "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *; ";
 
   return db.query(query, [inc_votes, article_id]).then(({ rows }) => {
-    console.log(rows);
     if (!rows.length) {
       return Promise.reject({ status: 404, msg: "Not Found" });
     }
