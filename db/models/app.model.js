@@ -19,6 +19,8 @@ exports.selectArticleById = (article_id) => {
   });
 };
 
+
+
 exports.selectArticleComments = (article_id) => {
   const query =
     "SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC";
@@ -29,5 +31,20 @@ exports.selectArticleComments = (article_id) => {
     }
 
     return rows;
+
   });
-};
+
+
+exports.insertArticleComments = (article_id, newComment) => {
+  const { username, body } = newComment;
+
+  const query =
+    "INSERT INTO comments ( body, author, article_id) VALUES ($1, $2, $3) RETURNING *; ";
+  const queryValues = [body, username, article_id];
+
+  return db.query(query, queryValues).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Not Found" });
+    }
+    return rows[0];
+  })
