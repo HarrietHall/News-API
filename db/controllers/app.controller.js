@@ -1,7 +1,11 @@
 const db = require("../connection");
 const endpointData = require("../../endpoints.json");
 
-const { selectAllTopics, selectArticleById, selectAllArticles } = require("../models/app.model");
+const {
+  selectAllTopics,
+  selectArticleById,
+  selectArticleComments,
+} = require("../models/app.model");
 
 exports.getAllTopics = (req, res, next) => {
   selectAllTopics()
@@ -15,28 +19,27 @@ exports.getEndpointData = (req, res, next) => {
   res.status(200).send({ endpointData });
 };
 
-
-
 exports.getArticleById = (req, res, next) => {
+  const { article_id } = req.params;
 
-const {article_id} = req.params
-
-selectArticleById(article_id)
-.then((article) => {
-  res.status(200).send({ article });
-})
-.catch(next);
+  selectArticleById(article_id)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
 };
 
+exports.getArticleComments = (req, res, next) => {
+  const { article_id } = req.params;
+  const promises = [selectArticleById(article_id), selectArticleComments(article_id)];
 
+  Promise.all(promises)
 
-exports.getAllArticles = (req, res, next) => {
-  selectAllArticles()
-    .then((article) => {
-    res.status(200).send({ article });
-  })
-  .catch(next);
-  };
+    .then((resolvedPromises) => {
+      const comments = resolvedPromises[1];
 
+      res.status(200).send({ comments });
+    })
 
-
+    .catch(next);
+};
