@@ -80,7 +80,10 @@ test("404 : Responds with message -'Not Found' when article id is valid but does
     });
 });
 
-xdescribe("GET /api/articles/:article_id/comments", () => {
+
+
+describe("GET /api/articles/:article_id/comments", () => {
+
   test("200: Responds with an array of article comments for the specified article id", () => {
     return request(app)
       .get("/api/articles/1/comments")
@@ -124,9 +127,8 @@ xdescribe("GET /api/articles/:article_id/comments", () => {
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("Not Found");
-        });
+        })
     });
-});
 
 describe(" PATCH /api/articles/:article_id", () => {
   test("200: Responds with an article object with the views property updated adding votes", () => {
@@ -182,3 +184,5 @@ describe(" PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
+
