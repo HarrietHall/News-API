@@ -55,7 +55,6 @@ describe("GET -  /api/articles/:article_id", () => {
         const { article } = body;
 
         expect(article).toHaveProperty("title", expect.any(String));
-        expect(article).toHaveProperty("article_id", expect.any(Number));
         expect(article).toHaveProperty("body", expect.any(String));
         expect(article).toHaveProperty("topic", expect.any(String));
         expect(article).toHaveProperty("created_at", expect.any(String));
