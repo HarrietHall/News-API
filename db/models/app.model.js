@@ -89,3 +89,15 @@ exports.selectCommentById = (comment_id) => {
     });
   });
 };
+
+
+exports.selectAllUsers = () => {
+const query = "SELECT * FROM users ";
+
+
+return db.query(query).then(({ rows }) => {
+return rows;
+});
+};
+
+

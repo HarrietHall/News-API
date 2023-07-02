@@ -86,6 +86,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
+
         const { comments } = body;
         expect(comments).toBeSortedBy("created_at", { descending: true });
         expect(comments.length).toBe(11);
@@ -96,6 +97,7 @@ describe("GET /api/articles/:article_id/comments", () => {
           expect(comment).toHaveProperty("created_at", expect.any(String));
           expect(comment).toHaveProperty("author", expect.any(String));
           expect(comment).toHaveProperty("body", expect.any(String));
+
         });
       });
   });
@@ -254,5 +256,22 @@ describe("GET /api/articles/:article_id/comments", () => {
           expect(body.msg).toBe("Bad Request");
         });
     });
+  });
+});
+
+describe.only(" GET /api/users", () => {
+  test("200: Responds with an array of users objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        expect(users).toHaveLength(4);
+        users.forEach((user) => {
+          expect(user).toHaveProperty("username", expect.any(String));
+          expect(user).toHaveProperty("name", expect.any(String));
+          expect(user).toHaveProperty("avatar_url", expect.any(String));
+        });
+      });
   });
 });
