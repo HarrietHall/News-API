@@ -29,14 +29,15 @@ exports.selectAllArticles = () => {
 };
 
 exports.selectCommentById = (comment_id) => {
-  
-    const query = "DELETE FROM comments WHERE comment_id = $1 ";
+  const query = "SELECT * FROM comments WHERE comment_id = $1 ";
+  const deleteQuery = "DELETE FROM comments WHERE comment_id = $1 ";
+  return db.query(query, [comment_id]).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Not Found" });
+    }
 
-    return db.query(query, [comment_id]).then(({ rows }) => {
-      if (!rows.length) {
-        return Promise.reject({ status: 404, msg: "Not Found" });
-      }
-      return rows[0];
+    return db.query(deleteQuery, [comment_id]).then(({ rows }) => {
+      return rows;
     });
-  }
-
+  });
+};

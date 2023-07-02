@@ -42,8 +42,8 @@ exports.deleteCommentById = (req, res, next) => {
   const { comment_id } = req.params;
 
   selectCommentById(comment_id)
-    .then((comment) => {
-      res.status(204).send({comment});
+    .then(() => {
+      res.status(204).send({ msg: "No Content" });
     })
-    .catch(next)
+    .catch(next);
 };
