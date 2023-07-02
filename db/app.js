@@ -18,7 +18,8 @@ const {
   getArticleComments,
   postArticleComments,
   patchArticleVotes,
-  deleteCommentById
+  deleteCommentById,
+  getUsers
 } = require("./controllers/app.controller");
 
 app.use(express.json());

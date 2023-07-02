@@ -259,7 +259,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe.only(" GET /api/users", () => {
+describe(" GET /api/users", () => {
   test("200: Responds with an array of users objects", () => {
     return request(app)
       .get("/api/users")
