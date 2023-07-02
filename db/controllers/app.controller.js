@@ -5,7 +5,12 @@ const {
   selectAllTopics,
   selectArticleById,
   selectAllArticles,
-  selectCommentById,
+
+
+  selectArticleComments,
+  insertArticleComments,
+  selectArticleVotes,
+
 } = require("../models/app.model");
 
 exports.getAllTopics = (req, res, next) => {
@@ -38,12 +43,52 @@ exports.getAllArticles = (req, res, next) => {
     .catch(next);
 };
 
+
+exports.getArticleComments = (req, res, next) => {
+  const { article_id } = req.params;
+  const promises = [
+    selectArticleById(article_id),
+    selectArticleComments(article_id),
+  ];
+
+  Promise.all(promises)
+
+    .then((resolvedPromises) => {
+      const comments = resolvedPromises[1];
+
+      res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.postArticleComments = (req, res, next) => {
+  const newComment = req.body;
+  const { article_id } = req.params;
+
+  insertArticleComments(article_id, newComment)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+exports.patchArticleVotes = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body.newVotes;
+
+  selectArticleVotes(article_id, inc_votes)
+    .then((article) => {
+      res.status(200).send({ article });
+
+    })
+    .catch(next);
+};
+
+
 exports.deleteCommentById = (req, res, next) => {
   const { comment_id } = req.params;
 
   selectCommentById(comment_id)
     .then(() => {
       res.status(204).send({ msg: "No Content" });
-    })
-    .catch(next);
-};
+
