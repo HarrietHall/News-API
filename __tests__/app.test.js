@@ -25,7 +25,7 @@ describe("GET - api/topics", () => {
         });
       });
   });
-  test("404: responds with message - 'Not Found' for an invalid endpoint", () => {
+  test("404: responds with message - 'Route not Found' for an invalid endpoint", () => {
     return request(app)
       .get("/api/notARoute")
       .expect(404)
@@ -86,7 +86,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-        const { comments } = body;
+              const { comments } = body;
         expect(comments).toBeSortedBy("created_at", { descending: true });
         expect(comments.length).toBe(11);
         comments.forEach((comment) => {
@@ -96,6 +96,7 @@ describe("GET /api/articles/:article_id/comments", () => {
           expect(comment).toHaveProperty("created_at", expect.any(String));
           expect(comment).toHaveProperty("author", expect.any(String));
           expect(comment).toHaveProperty("body", expect.any(String));
+
         });
       });
   });
@@ -254,5 +255,32 @@ describe("GET /api/articles/:article_id/comments", () => {
           expect(body.msg).toBe("Bad Request");
         });
     });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Responds with message - 'No content", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+  test("400 : Responds with message -'Bad Request' for an invalid comment id", () => {
+    return request(app)
+      .delete("/api/comments/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("404 : Responds with message -'Not Found' when comment id is valid but does not exist", () => {
+    return request(app)
+      .delete("/api/comments/99999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
   });
 });
