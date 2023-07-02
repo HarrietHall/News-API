@@ -5,12 +5,10 @@ const {
   selectAllTopics,
   selectArticleById,
   selectAllArticles,
-
-
   selectArticleComments,
   insertArticleComments,
   selectArticleVotes,
-
+  selectCommentById,
 } = require("../models/app.model");
 
 exports.getAllTopics = (req, res, next) => {
@@ -42,7 +40,6 @@ exports.getAllArticles = (req, res, next) => {
     })
     .catch(next);
 };
-
 
 exports.getArticleComments = (req, res, next) => {
   const { article_id } = req.params;
@@ -79,11 +76,9 @@ exports.patchArticleVotes = (req, res, next) => {
   selectArticleVotes(article_id, inc_votes)
     .then((article) => {
       res.status(200).send({ article });
-
     })
     .catch(next);
 };
-
 
 exports.deleteCommentById = (req, res, next) => {
   const { comment_id } = req.params;
@@ -91,4 +86,6 @@ exports.deleteCommentById = (req, res, next) => {
   selectCommentById(comment_id)
     .then(() => {
       res.status(204).send({ msg: "No Content" });
-
+    })
+    .catch(next);
+};

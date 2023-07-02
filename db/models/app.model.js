@@ -30,23 +30,25 @@ exports.selectAllArticles = () => {
 
 
 exports.selectArticleComments = (article_id) => {
-  
   const query =
-    "SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC";
-
-  return db.query(query, [article_id]).then(({ rows }) => {
-    if (!rows.length) {
-      return Promise.resolve({comments: `${rows}`, status: 200, msg: "No comments found" });
-
-    }
+  "SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC";
   
+  
+  return db.query(query, [article_id]).then(({ rows }) => {
+  if (!rows.length) {
+  return Promise.resolve({ comments: `${rows}`, status: 200, msg: "No comments found" });
+  }
+  
+  
+  return rows;
   });
-};
+  };
+  
 
 
 
 exports.insertArticleComments = (article_id, newComment) => {
-  console.log('in moel')
+
   const { username, body } = newComment;
 
   const query =
