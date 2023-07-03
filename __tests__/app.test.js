@@ -80,13 +80,91 @@ test("404 : Responds with message -'Not Found' when article id is valid but does
     });
 });
 
+xdescribe("GET /api/articles", () => {
+  test("200: Responds with an array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveLength(13);
+        expect(article).toBeSortedBy("created_at", { descending: true });
+        article.forEach((article) => {
+          expect(article).toHaveProperty("title", expect.any(String));
+          expect(article).toHaveProperty("article_id", expect.any(Number));
+          expect(article).toHaveProperty("topic", expect.any(String));
+          expect(article).toHaveProperty("created_at", expect.any(String));
+          expect(article).toHaveProperty("votes", expect.any(Number));
+          expect(article).toHaveProperty("article_img_url", expect.any(String));
+          expect(article).toHaveProperty("comment_count", expect.any(Number));
+        });
+      });
+  });
+  test("200: Responds with a filtered array of articles - filtered by topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(13);
+        expect(articles).toBeSortedBy("topic");
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("404: responds with not found message for an invalid topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not found");
+      });
+  });
+test("200: Sort by query, which sorts articles by any valid column", () => {
+  return request(app)
+    .get("/api/articles?sort_by=topic")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body;
+      expect(articles).toHaveLength(13);
+      expect(articles).toBeSortedBy("topic");
+    });
+});
+test("400: responds with bad request message for an invalid sort-by", () => {
+  return request(app)
+    .get("/api/treasures?sort_by=notValidSort_by")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request");
+    });
+});
+test("200: orders articles based on order query", () => {
+  return request(app)
+    .get("/api/articles?order=asc")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body;
+      expect(articles).toHaveLength(13);
+      expect(articles).toBeSortedBy("created_at", { ascending: true });
+    });
+});
+test("400: responds with bad request message for an invalid order query", () => {
+  return request(app)
+    .get("/api/treasures?order=invalidOrder")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request");
+    });
+});
+})
+
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: Responds with an array of article comments for the specified article id", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-
         const { comments } = body;
         expect(comments).toBeSortedBy("created_at", { descending: true });
         expect(comments.length).toBe(11);
@@ -97,7 +175,6 @@ describe("GET /api/articles/:article_id/comments", () => {
           expect(comment).toHaveProperty("created_at", expect.any(String));
           expect(comment).toHaveProperty("author", expect.any(String));
           expect(comment).toHaveProperty("body", expect.any(String));
-
         });
       });
   });

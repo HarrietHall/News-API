@@ -19,14 +19,37 @@ exports.selectArticleById = (article_id) => {
   });
 };
 
-exports.selectAllArticles = () => {
-  const query =
-    "SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.created_at DESC ";
 
-  return db.query(query).then(({ rows }) => {
-    return rows;
-  });
+
+exports.selectAllArticles = (topic = "", sort_by = "created_at", order = "desc") => {
+
+  const validSortBy = ["author", "title", "article_id", "topic", "created_at", "votes", "article_img_url"];
+  const validOrderBy = ["asc", "desc"]
+  
+  if (!validSortBy.includes(sort_by) ||!validOrderBy.includes(order)){
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  
+  const query =
+    "SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id ";
+     
+    if (topic){
+      query += 'WHERE topic = $1 ';
+    [topic]
+    }
+    query += "GROUP BY articles.article_id "
+    
+    if (sort_by) {
+         query += `ORDER by ${sort_by} ${order} `; 
+    }else {
+      query += `ORDER by created_at ${order} `;
+     }
+      return db.query(query, topic).then(({ rows }) => {
+      return rows;
+    });
 };
+
+
 
 
 exports.selectArticleComments = (article_id) => {
