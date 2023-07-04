@@ -43,7 +43,7 @@ res.status(200).send({ article });
 
 exports.getAllArticles = (req, res, next) => {
     const {topic, sort_by, order} = req.query
-
+  
 selectAllArticles(topic, sort_by, order)
 .then((article) => {
 res.status(200).send({ article });
