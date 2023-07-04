@@ -9,7 +9,8 @@ exports.selectAllTopics = () => {
 };
 
 exports.selectArticleById = (article_id) => {
-  const query = "SELECT * FROM articles WHERE article_id = $1";
+  const query =
+    "SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id";
 
   return db.query(query, [article_id]).then(({ rows }) => {
     if (!rows.length) {
@@ -19,61 +20,62 @@ exports.selectArticleById = (article_id) => {
   });
 };
 
-
-
 exports.selectAllArticles = (topic, sort_by = "created_at", order = "desc") => {
-const queryValues = []
-  const validSortBy = ["author", "title", "article_id", "topic", "created_at", "votes", "article_img_url"];
-  const validOrderBy = ["asc", "desc"]
- 
-  if (!validSortBy.includes(sort_by) ||!validOrderBy.includes(order)){
-   return Promise.reject({ status: 400, msg: "Bad request" });
+  const queryValues = [];
+  const validSortBy = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "article_img_url",
+  ];
+  const validOrderBy = ["asc", "desc"];
+
+  if (!validSortBy.includes(sort_by) || !validOrderBy.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
   }
   let query =
     "SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comment_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id ";
-     
-    if (topic){
-      query += 'WHERE topic = $1 ';
-    queryValues.push(topic)
+
+  if (topic) {
+    query += "WHERE topic = $1 ";
+    queryValues.push(topic);
+  }
+  query += "GROUP BY articles.article_id ";
+
+  if (sort_by) {
+    query += `ORDER by ${sort_by} ${order} `;
+  } else {
+    query += `ORDER by created_at ${order} `;
+  }
+  return db.query(query, queryValues).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Not Found" });
     }
-    query += "GROUP BY articles.article_id "
-    
-    if (sort_by) {
-         query += `ORDER by ${sort_by} ${order} `;
-
-    }else {
-      query += `ORDER by created_at ${order} `;
-     }
-      return db.query(query, queryValues).then(({ rows }) => {
-        if (!rows.length) {
-          return Promise.reject({ status: 404, msg: "Not Found" });
-        }
-      return rows;
-    });
+    return rows;
+  });
 };
-
-
 
 exports.selectArticleComments = (article_id) => {
   const query =
-  "SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC";
-  
-  
+    "SELECT * FROM comments WHERE article_id = $1 ORDER BY comments.created_at DESC";
+
   return db.query(query, [article_id]).then(({ rows }) => {
-  if (!rows.length) {
-  return Promise.resolve({ comments: `${rows}`, status: 200, msg: "No comments found" });
-  }
-  
-  
-  return rows;
+    if (!rows.length) {
+      return Promise.resolve({
+        comments: `${rows}`,
+        status: 200,
+        msg: "No comments found",
+      });
+    }
+
+    return rows;
   });
-  };
-  
-
-
+};
 
 exports.insertArticleComments = (article_id, newComment) => {
-
   const { username, body } = newComment;
 
   const query =
@@ -81,7 +83,6 @@ exports.insertArticleComments = (article_id, newComment) => {
   const queryValues = [body, username, article_id];
 
   return db.query(query, queryValues).then(({ rows }) => {
-   
     if (!rows.length) {
       return Promise.reject({ status: 404, msg: "Not Found" });
     }
@@ -110,20 +111,15 @@ exports.selectCommentById = (comment_id) => {
     }
 
     return db.query(deleteQuery, [comment_id]).then(({ rows }) => {
-      
       return rows;
     });
   });
 };
 
-
 exports.selectAllUsers = () => {
-const query = "SELECT * FROM users ";
+  const query = "SELECT * FROM users ";
 
-
-return db.query(query).then(({ rows }) => {
-return rows;
-});
+  return db.query(query).then(({ rows }) => {
+    return rows;
+  });
 };
-
-

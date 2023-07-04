@@ -53,13 +53,22 @@ describe("GET -  /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-
-        expect(article).toHaveProperty("title", expect.any(String));
-        expect(article).toHaveProperty("body", expect.any(String));
-        expect(article).toHaveProperty("topic", expect.any(String));
+        expect(article).toHaveProperty(
+          "title",
+          "Living in the shadow of a great man"
+        );
+        expect(article).toHaveProperty(
+          "body",
+          "I find this existence challenging"
+        );
+        expect(article).toHaveProperty("topic", "mitch");
         expect(article).toHaveProperty("created_at", expect.any(String));
         expect(article).toHaveProperty("votes", expect.any(Number));
-        expect(article).toHaveProperty("article_img_url", expect.any(String));
+        expect(article).toHaveProperty(
+          "article_img_url",
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        );
+        expect(article).toHaveProperty("comment_count", "11");
       });
   });
 });
@@ -90,6 +99,7 @@ describe("GET /api/articles", () => {
         expect(article).toHaveLength(13);
         expect(article).toBeSortedBy("created_at", { descending: true });
         article.forEach((article) => {
+          expect(article).toHaveProperty("author", expect.any(String));
           expect(article).toHaveProperty("title", expect.any(String));
           expect(article).toHaveProperty("article_id", expect.any(Number));
           expect(article).toHaveProperty("topic", expect.any(String));
@@ -121,43 +131,43 @@ describe("GET /api/articles", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-test("200: Sort by query, which sorts articles by any valid column", () => {
-  return request(app)
-    .get("/api/articles?sort_by=topic")
-    .expect(200)
-    .then(({ body }) => {
-      const { article } = body;
-      expect(article).toHaveLength(13);
-      expect(article).toBeSortedBy("topic", { descending: true });
-    });
+  test("200: Sort by query, which sorts articles by any valid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=topic")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveLength(13);
+        expect(article).toBeSortedBy("topic", { descending: true });
+      });
+  });
+  test("400: responds with bad request message for an invalid sort-by", () => {
+    return request(app)
+      .get("/api/articles?sort_by=notValidSort_by")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("200: orders articles based on order query", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveLength(13);
+        expect(article).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+  test("400: responds with bad request message for an invalid order query", () => {
+    return request(app)
+      .get("/api/articles?order=invalidOrder")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
 });
-test("400: responds with bad request message for an invalid sort-by", () => {
-  return request(app)
-    .get("/api/articles?sort_by=notValidSort_by")
-    .expect(400)
-    .then(({ body }) => {
-      expect(body.msg).toBe("Bad request");
-    });
-});
-test("200: orders articles based on order query", () => {
-  return request(app)
-    .get("/api/articles?order=asc")
-    .expect(200)
-    .then(({ body }) => {
-      const { article } = body;
-      expect(article).toHaveLength(13);
-      expect(article).toBeSortedBy("created_at", { ascending: true });
-    });
-});
-test("400: responds with bad request message for an invalid order query", () => {
-  return request(app)
-    .get("/api/articles?order=invalidOrder")
-    .expect(400)
-    .then(({ body }) => {
-     expect(body.msg).toBe("Bad request");
-    });
-});
-})
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: Responds with an array of article comments for the specified article id", () => {
