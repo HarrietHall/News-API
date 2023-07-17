@@ -1,8 +1,9 @@
+const cors = require('cors');
 const express = require("express");
 const app = express();
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
-
+app.use(cors());
 
 const {
   handlePsqlErrors,
