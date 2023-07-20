@@ -295,7 +295,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       const newVotes = { inc_votes: 1 };
       return request(app)
         .patch("/api/articles/1")
-        .send({ newVotes })
+        .send(newVotes )
         .expect(200)
         .then(({ body }) => {
           const { article } = body;
@@ -306,7 +306,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       const newVotes = { inc_votes: -100 };
       return request(app)
         .patch("/api/articles/2")
-        .send({ newVotes })
+        .send( newVotes )
         .expect(200)
         .then(({ body }) => {
           const { article } = body;
@@ -317,7 +317,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       const newVotes = { inc_votes: -100 };
       return request(app)
         .patch("/api/articles/notAnId")
-        .send({ newVotes })
+        .send( newVotes )
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad Request");
@@ -327,7 +327,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       const newVotes = { inc_votes: -100 };
       return request(app)
         .patch("/api/articles/99999999")
-        .send({ newVotes })
+        .send( newVotes )
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("Not Found");
@@ -337,7 +337,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       const newVotes = { not_inc_votes: -100 };
       return request(app)
         .patch("/api/articles/1")
-        .send({ newVotes })
+        .send( newVotes )
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad Request");
