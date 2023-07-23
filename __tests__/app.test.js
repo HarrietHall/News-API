@@ -346,6 +346,32 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Responds with message - 'No content", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+  test("400 : Responds with message -'Bad Request' for an invalid comment id", () => {
+    return request(app)
+    .delete("/api/comments/notAnId")
+  .expect(400)
+  .then(({ body }) => {
+    expect(body.msg).toBe("Bad Request");
+  });
+});
+test("404 : Responds with message -'Not Found' when comment id is valid but does not exist", () => {
+return request(app)
+  .delete("/api/comments/99999999")
+  .expect(404)
+  .then(({ body }) => {
+  expect(body.msg).toBe("Not Found");
+  })
+})
+})
 describe(" GET /api/users", () => {
   test("200: Responds with an array of users objects", () => {
     return request(app)
