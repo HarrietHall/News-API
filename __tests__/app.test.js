@@ -363,14 +363,14 @@ describe("DELETE /api/comments/:comment_id", () => {
     expect(body.msg).toBe("Bad Request");
   });
 });
-// test("404 : Responds with message -'Not Found' when comment id is valid but does not exist", () => {
-// return request(app)
-//   .delete("/api/comments/99999999")
-//   .expect(404)
-//   .then(({ body }) => {
-//   expect(body.msg).toBe("Not Found");
-//   })
-// })
+test("404 : Responds with message -'Not Found' when comment id is valid but does not exist", () => {
+return request(app)
+  .delete("/api/comments/99999999")
+  .expect(404)
+  .then(({ body }) => {
+  expect(body.msg).toBe("Not Found");
+  })
+})
 })
 describe(" GET /api/users", () => {
   test("200: Responds with an array of users objects", () => {
