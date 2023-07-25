@@ -104,17 +104,16 @@ exports.selectArticleVotes = (article_id, inc_votes) => {
 };
 exports.selectCommentById = (comment_id) => {
   const query = "SELECT * FROM comments WHERE comment_id = $1 ";
-  const deleteQuery = "DELETE FROM comments WHERE comment_id = $1 ";
   return db.query(query, [comment_id]).then(({ rows }) => {
     if (!rows.length) {
-      return Promise.reject({ status: 404, msg: "Not Found" });
-    }
-
-    return db.query(deleteQuery, [comment_id]).then(({ rows }) => {
+    return Promise.reject({ status: 404, msg: "Not Found" });
+    } else {  const deleteQuery = "DELETE FROM comments WHERE comment_id = $1 ";
+      return db.query(deleteQuery, [comment_id]).then(({ rows }) => {
       return rows;
     });
-  });
-};
+  }
+  })
+}
 
 exports.selectAllUsers = () => {
   const query = "SELECT * FROM users ";

@@ -11,7 +11,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
@@ -25,8 +25,88 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an individual article",
+    "queries": ["article_id"],
+    "exampleResponse": {
+      "articles": [
+        {
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "votes": 0,
+          "comment_count": 6
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of an individual article's comments",
+    "queries": ["article_id"],
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "The owls are not what they seem.",
+          "votes": 20,
+          "author": "icellusedkars",
+          "article_id": 9,
+          "created_at": 1584205320000
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a comment to the comments array",
+    "queries": ["article_id", "body", "username"],
+    "example newCOmment": {
+      "username": "butter_bridge",
+      "body": "Impressive article"
+    },
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "This is a bad article name",
+          "votes": 1,
+          "author": "butter_bridge",
+          "article_id": 6,
+          "created_at": 1602433380000
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "updates the vote count for an individual article",
+    "queries": ["article_id", "body", "username"],
+    "example request": {
+      "inc_votes": 1
+    },
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "This is a bad article name",
+          "votes": 1,
+          "author": "butter_bridge",
+          "article_id": 6,
+          "created_at": 1602433380000
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment from the comments array",
+    "queries": ["comment_id"],
+    "exampleResponse": { "msg": "No Content" }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "username": "butter_bridge",
+      "name": "jonny",
+      "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+    }
   }
-
 }
-
-
