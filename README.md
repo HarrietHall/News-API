@@ -6,13 +6,14 @@ This project is an API that simulates the backend of a news platform similar to 
 
 The hosted version can be found at: https://news-api-ney0.onrender.com
 
+ The projects front-end repo can be found: https://github.com/HarrietHall/News
+
+
 
 To run this project locally, you'll need:
 
-- Node.js (LTS version 14 or later recommended)
+- Node.js (minimum version required: v20.0.0)
 - PostgreSQL (version 13 or later recommended)
-
-
 
 
 To get the project running locally on your machine, follow these steps:
@@ -51,7 +52,3 @@ Into the development file, add PGDATABASE=nc_news
     - npm test
 
 
-
-
-
-The minimum versions of Node.js, and Postgres needed to run the project.
